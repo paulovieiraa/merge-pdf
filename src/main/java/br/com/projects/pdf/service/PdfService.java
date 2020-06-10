@@ -4,5 +4,5 @@ import br.com.projects.pdf.dto.request.PdfRequest;
 
 public interface PdfService {
 
-   byte[] mergePdf(PdfRequest pdfRequest);
+   void mergePdf(PdfRequest pdfRequest);
 }

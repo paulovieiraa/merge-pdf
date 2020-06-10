@@ -20,19 +20,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PdfServiceImpl implements PdfService {
 
+    private static final Logger log = LoggerFactory.getLogger(PdfServiceImpl.class);
+
     @Override
-    public byte[] mergePdf(PdfRequest pdfRequest) {
+    public void mergePdf(PdfRequest pdfRequest) {
 
         String pdfName = pdfRequest.getPdfName();
         List<String> paths = pdfRequest.getPaths();
 
         List<InputStream> list = new ArrayList<>();
-        byte[] array;
+//        byte[] array;
 
         try {
 
@@ -40,7 +44,7 @@ public class PdfServiceImpl implements PdfService {
                 try {
                     list.add(new FileInputStream(new File(it)));
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    log.error("Erro ao buscar os PDFS.", e);
                 }
             });
 
@@ -48,6 +52,23 @@ public class PdfServiceImpl implements PdfService {
                 .getProperty("user.dir"); //root directory of where your program runs
             String name = "/pdf/" + pdfName + ".pdf";
             String name2 = pathTemp + name;
+
+            String systemOperation = checkSO().toLowerCase();
+
+            if (systemOperation.contains("mac")) {
+                String host = System.getProperty("user.name");
+                name = "/Users/" + host + "/Desktop/PDF-MERGE/" + pdfName + ".pdf";
+                log.info("Download do PDF em: {}", name);
+                System.out.println("Download do PDF em: ".concat(name));
+                name2 = name;
+            } else if (checkSO().toLowerCase().contains("win")) {
+                String host = System.getProperty("user.name");
+                name = "C:\\Users\\" + host + "\\Desktop\\PDF-MERGE\\" + pdfName + ".pdf";
+                log.info("Download do PDF em: {}", name);
+                System.out.println("Download do PDF em: ".concat(name));
+                name2 = name;
+            }
+
             Path path = Paths.get(name2);
 
             // Resulting pdf
@@ -56,13 +77,12 @@ public class PdfServiceImpl implements PdfService {
 
             this.doMerge(list, out);
 
-            array = Files.readAllBytes(Paths.get(name2));
+//            array = Files.readAllBytes(Paths.get(name2));
 
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            log.error("Erro interno: ", e);
         }
-        return array;
+//        return array;
     }
 
     private void doMerge(List<InputStream> list, OutputStream outputStream)
@@ -89,5 +109,11 @@ public class PdfServiceImpl implements PdfService {
         outputStream.flush();
         document.close();
         outputStream.close();
+    }
+
+    private String checkSO() {
+        String systemOperation = System.getProperty("os.name");
+        log.info("Sistema operacional: {}", systemOperation);
+        return systemOperation;
     }
 }

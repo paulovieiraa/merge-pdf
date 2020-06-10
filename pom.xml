@@ -7,7 +7,7 @@
 	<groupId>br.com.projects</groupId>
 	<artifactId>merge-pdf</artifactId>
 	<version>1.0.0</version>
-	<name>Merge PDFs</name>
+	<name>Merge-pdf</name>
 	<description>Merge Multiple PDFs</description>
 
 	<parent>

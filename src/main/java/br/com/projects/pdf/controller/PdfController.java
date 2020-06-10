@@ -23,7 +23,7 @@ public class PdfController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/merge", produces = "application/pdf")
-    public byte[] mergePdf(@RequestBody PdfRequest pdfRequest) {
-        return pdfService.mergePdf(pdfRequest);
+    public void mergePdf(@RequestBody PdfRequest pdfRequest) {
+        pdfService.mergePdf(pdfRequest);
     }
 }
