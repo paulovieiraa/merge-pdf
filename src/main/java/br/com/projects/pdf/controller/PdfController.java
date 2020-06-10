@@ -21,7 +21,7 @@ public class PdfController {
         this.pdfService = pdfService;
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(path = "/merge", produces = "application/pdf")
     public byte[] mergePdf(@RequestBody PdfRequest pdfRequest) {
         return pdfService.mergePdf(pdfRequest);
