@@ -18,7 +18,6 @@ target/
 **/.sts4-cache/
 **/.springBeans
 
-
 ### Intellij ###
 .idea/
 *.iml
@@ -34,3 +33,6 @@ target/
 ### Spring 2 ###
 mvnw
 mvnw.cmd
+
+### PDF ###
+/pdf
