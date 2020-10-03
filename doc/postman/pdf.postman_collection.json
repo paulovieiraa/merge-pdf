@@ -1,0 +1,66 @@
+{
+  "info": {
+    "_postman_id": "cb39b119-eed6-4bac-922c-c68dc3c3ba0a",
+    "name": "pdf",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "PDF",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pdfName\":\"merge-pdf\",\n    \"paths\": [\n        \"/Users/paulovieira/Downloads/Scan1.pdf\",\n        \"/Users/paulovieira/Downloads/Scan2.pdf\"\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/pdf/merge",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "pdf",
+            "merge"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PDF - linux",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"pdfName\":\"merge-pdf\",\n    \"paths\": [\n        \"/home/paulo/Documents/t1.pdf\",\n        \"/home/paulo/Documents/t1.pdf\"\n    ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "localhost:8080/pdf/merge",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "pdf",
+            "merge"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "protocolProfileBehavior": {}
+}

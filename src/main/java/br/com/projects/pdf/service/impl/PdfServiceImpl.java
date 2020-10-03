@@ -1,13 +1,5 @@
 package br.com.projects.pdf.service.impl;
 
-import br.com.projects.pdf.dto.request.PdfRequest;
-import br.com.projects.pdf.service.PdfService;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfContentByte;
-import com.itextpdf.text.pdf.PdfImportedPage;
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -20,23 +12,31 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.stereotype.Service;
 
-@Service
-public class PdfServiceImpl implements PdfService {
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfContentByte;
+import com.itextpdf.text.pdf.PdfImportedPage;
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.PdfWriter;
 
-    private static final Logger log = LoggerFactory.getLogger(PdfServiceImpl.class);
+import br.com.projects.pdf.dto.request.PdfRequest;
+import br.com.projects.pdf.exception.BusinessException;
+import br.com.projects.pdf.service.PdfService;
+import lombok.extern.log4j.Log4j2;
+
+@Service
+@Log4j2
+public class PdfServiceImpl implements PdfService {
 
     @Override
     public void mergePdf(PdfRequest pdfRequest) {
 
         String pdfName = pdfRequest.getPdfName();
         List<String> paths = pdfRequest.getPaths();
-
         List<InputStream> list = new ArrayList<>();
-//        byte[] array;
 
         try {
 
@@ -49,23 +49,24 @@ public class PdfServiceImpl implements PdfService {
             });
 
             String pathTemp = System
-                .getProperty("user.dir"); //root directory of where your program runs
+                    .getProperty("user.dir"); //root directory of where your program runs
             String name = "/pdf/" + pdfName + ".pdf";
             String name2 = pathTemp + name;
 
             String systemOperation = checkSO().toLowerCase();
+            String host = System.getProperty("user.name");
 
             if (systemOperation.contains("mac")) {
-                String host = System.getProperty("user.name");
                 name = "/Users/" + host + "/Desktop/PDF-MERGE/" + pdfName + ".pdf";
-                log.info("Download do PDF em: {}", name);
-                System.out.println("Download do PDF em: ".concat(name));
+                log.info("Download do PDF em: [{}]", name);
                 name2 = name;
             } else if (checkSO().toLowerCase().contains("win")) {
-                String host = System.getProperty("user.name");
                 name = "C:\\Users\\" + host + "\\Desktop\\PDF-MERGE\\" + pdfName + ".pdf";
-                log.info("Download do PDF em: {}", name);
-                System.out.println("Download do PDF em: ".concat(name));
+                log.info("Download do PDF em: [{}]", name);
+                name2 = name;
+            } else {
+                name = "/home/" + host + "/Desktop/PDF-MERGE/" + pdfName + ".pdf";
+                log.info("Download do PDF em: [{}]", name);
                 name2 = name;
             }
 
@@ -77,16 +78,14 @@ public class PdfServiceImpl implements PdfService {
 
             this.doMerge(list, out);
 
-//            array = Files.readAllBytes(Paths.get(name2));
-
         } catch (Exception e) {
             log.error("Erro interno: ", e);
+            throw new BusinessException("Erro interno", e);
         }
-//        return array;
     }
 
     private void doMerge(List<InputStream> list, OutputStream outputStream)
-        throws DocumentException, IOException {
+            throws DocumentException, IOException {
 
         Document document = new Document();
 
@@ -109,6 +108,7 @@ public class PdfServiceImpl implements PdfService {
         outputStream.flush();
         document.close();
         outputStream.close();
+        log.info("Result ok");
     }
 
     private String checkSO() {
