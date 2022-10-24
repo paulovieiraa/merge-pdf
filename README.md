@@ -2,4 +2,4 @@
 Merge Multiple PDF
 
 
-Test IntelliJ.
+Test IntelliJ
